@@ -19,7 +19,7 @@ if($mysqli->errno){
     echo "database selection failed (".$mysqli->errno.") ".$mysqli->error;
     exit;
 }
-// create card table
+// create cart table
 $query = "create table if not exists cart(
     id smallint unsigned auto_increment primary key, 
     quantity smallint unsigned,
@@ -32,8 +32,8 @@ if(!$res){
     exit;
 }
 
-// create history table
-$query = "create table if not exists history(
+// create order table
+$query = "create table if not exists order(
     id int unsigned auto_increment primary key,
     user_id smallint unsigned,
     product_id smallint unsigned,
