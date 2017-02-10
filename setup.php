@@ -37,14 +37,17 @@ $query = "create table if not exists user(
    user_id smallint unsigned,
    id smallint unsigned auto_increment primary key,
    interest_name varchar(100) not null
+   foreign key (user_id) references user(id)
    )";
 
 // create cart table
 $query = "create table if not exists cart(
-    id smallint unsigned auto_increment primary key,
     quantity smallint unsigned,
+    user_id smallint unsigned,
     product_id smallint unsigned,
     foreign key (product_id) references product(id)
+    foreign key (user_id) references user(id)
+    PRIMARY KEY (user_id,product_id)
     )";
 $res = $mysqli->query($query);
 if(!$res){
@@ -75,7 +78,7 @@ $query = "create table if not exists ordered_product‎(
     )";
 $res = $mysqli->query($query);
 if(!$res){
-    echo "order table creation failed (".$mysqli->errno.") ".$mysqli->error;
+    echo "order _product table creation failed (".$mysqli->errno.") ".$mysqli->error;
     exit;
 }
 //create product table
