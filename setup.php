@@ -28,7 +28,7 @@ $query = "create table if not exists cart(
     )";
 $res = $mysqli->query($query);
 if(!$res){
-    echo "users table creation failed (".$mysqli->errno.") ".$mysqli->error;
+    echo "cart table creation failed (".$mysqli->errno.") ".$mysqli->error;
     exit;
 }
 
@@ -43,7 +43,7 @@ $query = "create table if not exists order(
     )";
 $res = $mysqli->query($query);
 if(!$res){
-    echo "posts table creation failed (".$mysqli->errno.") ".$mysqli->error;
+    echo "order table creation failed (".$mysqli->errno.") ".$mysqli->error;
     exit;
 }
 //create product table
