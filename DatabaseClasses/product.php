@@ -23,7 +23,7 @@ class product {
     function __construct($id, $subcategory_id, $name, $description, $price, $path_id) {
         $this->id = isset($this->id) ? $this->id : $id;
         $this->subcategory_id = isset($this->subcategory_id) ? $this->subcategory_id : $subcategory_id;
-        $this->name = isset($this->name) ? $this->name : name;
+        $this->name = isset($this->name) ? $this->name : $name;
         $this->description = isset($this->price) ? $this->price : $price;
         $this->path_id = isset($this->path_id) ? $this->path_id : $path_id;
     }
