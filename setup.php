@@ -86,10 +86,10 @@ $query = "create table if not exists product(
     id int unsigned not null auto_increment primary key,
     subcategory_id int unsigned,
     name varchar(100) not null,
+    quantity int,
     description text,
+    photo text,
     price float not null,
-    path_id int unsigned not null,
-    foreign key (path_id) references path(id),
     foreign key (subcategory_id) references subcategory(id)
     )";
 $res = $mysqli->query($query);
