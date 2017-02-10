@@ -19,6 +19,26 @@ if($mysqli->errno){
     echo "database selection failed (".$mysqli->errno.") ".$mysqli->error;
     exit;
 }
+//Create User table
+$query = "create table if not exists user(
+  id smallint unsigned auto_increment primary key,
+  name varchar(100) not null,
+  password int not null,
+  email varchar(100) unique,
+  birthday date not null,
+  credit_limit float not null,
+  job varchar(100) ,
+  address text not null
+  )";
+
+
+ //Create Table Interests
+ $query = "create table if not exists interests(
+   user_id smallint unsigned,
+   id smallint unsigned auto_increment primary key,
+   interest_name varchar(100) not null
+   )";
+
 // create cart table
 $query = "create table if not exists cart(
     id smallint unsigned auto_increment primary key,
