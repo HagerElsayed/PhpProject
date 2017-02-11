@@ -41,35 +41,20 @@ class user
  //start insert method
  function insert(){
    $success = true;
-
-   //connect database
-   $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-   if ($con->connect_errno) {
-       echo 'error connection to DB' . $con->connect_error . "<br>";
-       $success = false;
-       exit;
-   }
-
+   global $mysqli;
    $query = "insert into user(username,password,email,birthday,credit_limit,job,address,status) VALUES (?,?,?,?,?,?,?,?)";
 
   //prepare
-   $stmt = $con->prepare($query);
+   $stmt = $mysqli->prepare($query);
    if(!$stmt){
-     echo "error prepare" . $con->error;
+     echo "error prepare" . $mysqli->error;
      exit;
    }
-   else {
-     echo "prepare succes";
-   }
-
    $result=$stmt->bind_param('sississi',$this->username,$this->password,$this->email,$this->birthday,$this->credit_limit,$this->job,$this->address,$this->status);
    if (!$result) {
        echo 'binding failed' . $stmt->error;
        $success = false;
        exit;
-   }
-   else {
-     echo 'binding success'."<br />";
    }
    //execute
    if (!$stmt->execute()) {
@@ -77,36 +62,25 @@ class user
        $success = false;
        exit;
    }
-   else {
-    echo 'execuation success'."<br />";
-   }
    $stmt->close();
-   $con->close();
+   $mysqli->close();
    return $success;
 
 }//end insert method
 
-
- //start getById Function
+//start getById method
   static function getById($id){
    $success = true;
-
-   //connect database
-   $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-   if ($con->connect_errno) {
-       echo 'error connection to DB' . $con->connect_error . "<br>";
-       $success = false;
-      // exit;
-   }
+   global $mysqli;
 
   $query = "select * from user where id=?";
   //prepare
-   $stmt = $con->prepare($query);
+   $stmt = $mysqli->prepare($query);
    if(!$stmt){
-     echo "error prepare" . $con->error;
+     echo "error prepare" . $mysqli->error;
+     return false;
      exit;
    }
-
    //pind_param
    $res=$stmt->bind_param('i',$id);
    if (!$res) {
@@ -114,7 +88,6 @@ class user
        $success = false;
        exit;
    }
-
    //execute
    if(!$stmt->execute())
    {
@@ -123,34 +96,22 @@ class user
      exit;
    }
    $result = $stmt->get_result();
-   $users=[];
    $params = array('id','username','password','email','birthday','credit_limit','job','address','status','registered_at','update_at');
-   while ($user = $result->fetch_object('user',$params))
-   {
-     $users[] = $user;
-   }
+   $user = $result->fetch_object('user',$params);
    $stmt->close();
-   $con->close();
-   return $users;
+   $mysqli->close();
+   return $user;
+ }//end getById method
 
- }//end getById function
-
- //start getAll Function
+ //start getAll method
   function getAll(){
    $success = true;
-
-   //connect database
-   $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-   if ($con->connect_errno) {
-       echo 'error connection to DB' . $con->connect_error . "<br>";
-       $success = false;
-      // exit;
-   }
+   global $mysqli;
   $query = "select * from user";
   //prepare
-   $stmt = $con->prepare($query);
+   $stmt = $mysqli->prepare($query);
    if(!$stmt){
-     echo "error prepare" . $con->error;
+     echo "error prepare" . $mysqli->error;
      exit;
    }
 
@@ -169,13 +130,13 @@ class user
      $users[] = $user;
    }
    $stmt->close();
-   $con->close();
+   $mysqli->close();
    return $users;
+}//end getAll method
 
- }//end getAll function
-
-/*
+//start delete method
   function delete($id){
+    $success = true;
     global $mysqli;
     $result=false;
     $this->status=0;
@@ -185,7 +146,7 @@ class user
       return false;
     }
     $stmt->bind_param('i',$id);
-    if(!stmt){
+    if(!$stmt){
       return false;
     }
     $stmt->execute();
@@ -193,30 +154,21 @@ class user
       $result=true;
     }
     $stmt->close();
-    return $result;
+    $mysqli->close();
+    return $success;
+}//end delete method
 
-}//end delete
-*/
-/*
+//start update method
 function update()
 {
   $success = true;
-
-  //connect database
-  $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
-  if ($con->connect_errno) {
-      echo 'error connection to DB' . $con->connect_error . "<br>";
-      $success = false;
-     // exit;
-  }
+  global $mysqli;
 
   $query = "update user set username=? ,password=? ,email=? ,birthday=? ,credit_limit=? ,job=? ,address=? ,status=? where id=? ";
-
   //prepare
-  $stmt = $con->prepare($query);
+  $stmt = $mysqli->prepare($query);
   if(!$stmt){
-    echo "error prepare" . $con->error;
-    exit;
+    echo "error prepare" . $mysqli->error;
   }
 
   //bind_param
@@ -224,40 +176,17 @@ function update()
   if (!$result) {
       echo 'binding failed' . $stmt->error;
       $success = false;
-      exit;
   }
-
   //execute
   if(!$stmt->execute())
   {
     echo 'execuation failed' ."<br />". $stmt->error;
     $success = false;
-    exit;
-  }
-  else {
-   echo 'execuation success'."<br />";
   }
   $stmt->close();
-  $con->close();
+  $mysqli->close();
   return $success;
+}//end update method
 
-}//end update
-*/
 }//end class user
-/*
-$user= user::getById(1);
-echo "<pre>";
-var_dump($user);
-echo  "<pre>";
-
-$user->email='test@yahoo';
-if($user->update())
-{
-  echo $user->username . "update success<br>";
-}
-else {
-  echo "failed";
-}
-*/
-
 ?>
