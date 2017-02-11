@@ -1,128 +1,140 @@
 <?php
+
 require 'config.php';
-$mysqli = new mysqli(DBHOST, DBUSER,DBPASS);
+$mysqli = new mysqli(DBHOST, DBUSER, DBPASS);
 // open connection
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
-
 //create database
-$res = $mysqli->query('create database if not exists '.DBNAME);
-if(!$res){
-    echo "database creation failed (".$mysqli->errno.") ".$mysqli->error;
+$res = $mysqli->query('create database if not exists ' . DBNAME);
+if (!$res) {
+    echo "database creation failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
 }
-
 //select database
 $mysqli->select_db(DBNAME);
-if($mysqli->errno){
-    echo "database selection failed (".$mysqli->errno.") ".$mysqli->error;
+if ($mysqli->errno) {
+    echo "database selection failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
 }
 //Create User table
 $query = "create table if not exists user(
-  id smallint unsigned auto_increment primary key,
-  name varchar(100) not null,
+  id int unsigned auto_increment primary key,
+  username varchar(100) not null,
   password int not null,
   email varchar(100) unique,
   birthday date not null,
   credit_limit float not null,
   job varchar(100) ,
-  address text not null
+  address text not null,
+  status tinyint unsigned,
+  registered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   )";
-
-
- //Create Table Interests
- $query = "create table if not exists interests(
-   user_id smallint unsigned,
-   id smallint unsigned auto_increment primary key,
-   interest_name varchar(100) not null
+$res = $mysqli->query($query);
+if (!$res) {
+    echo "user table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
+    exit;
+}
+//Create Interests Table
+$query = "create table if not exists interests(
+   user_id int unsigned,
+   id int unsigned auto_increment primary key,
+   interest_name varchar(100) not null,
    foreign key (user_id) references user(id)
+   ON UPDATE CASCADE ON DELETE CASCADE
    )";
-
-// create cart table
-$query = "create table if not exists cart(
-    quantity smallint unsigned,
-    user_id smallint unsigned,
-    product_id smallint unsigned,
-    foreign key (product_id) references product(id)
-    foreign key (user_id) references user(id)
-    PRIMARY KEY (user_id,product_id)
-    )";
 $res = $mysqli->query($query);
-if(!$res){
-    echo "cart table creation failed (".$mysqli->errno.") ".$mysqli->error;
+if (!$res) {
+    echo "Interests table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
-}
-
-// create order table
-$query = "create table if not exists order(
-    id int unsigned auto_increment primary key,
-    user_id smallint unsigned,
-    date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    foreign key (user_id) references user(id)
-    )";
-$res = $mysqli->query($query);
-if(!$res){
-    echo "order table creation failed (".$mysqli->errno.") ".$mysqli->error;
-    exit;
-}
-$query = "create table if not exists ordered_product‎(
-    id int unsigned auto_increment primary key,
-    order_id smallint unsigned,
-    product_id smallint unsigned,
-    quantity smallint unsigned,
-    date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    foreign key (order_id) references order(id)
-    foreign key (product_id) references product(id)
-    )";
-$res = $mysqli->query($query);
-if(!$res){
-    echo "order _product table creation failed (".$mysqli->errno.") ".$mysqli->error;
-    exit;
-}
-//create product table
-$query = "create table if not exists product(
-    id int unsigned not null auto_increment primary key,
-    subcategory_id int unsigned,
-    name varchar(100) not null,
-    quantity int,
-    description text,
-    photo text,
-    price float not null,
-    foreign key (subcategory_id) references subcategory(id)
-    )";
-$res = $mysqli->query($query);
-if(!$res){
-    echo "product table creation failed (".$mysqli->errno.") ".$mysqli->error;
-    exit;
-}//End of error check for product table creation
-
+}//end interestes
 //create subcategory table
 $query = "create table if not exists subcategory(
-    id int unsigned not null auto_increment primary key,
-    name varchar(100) not null,
-    category_name varchar(100) not null
-    )";
+         id int unsigned auto_increment primary key,
+         name varchar(100) not null,
+         category_name varchar(100) not null
+         )";
 $res = $mysqli->query($query);
-if(!$res){
-    echo "subcategory table creation failed (".$mysqli->errno.") ".$mysqli->error;
+if (!$res) {
+    echo "subcategory table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
 }//End of error check for subcategory table creation
-
+//create product table
+$query = "create table if not exists product(
+         id int unsigned auto_increment primary key,
+         subcategory_id int unsigned,
+         name varchar(100) not null,
+         quantity int,
+         description text,
+         photo text,
+         price float not null,
+         foreign key (subcategory_id) references subcategory(id)
+         ON UPDATE CASCADE ON DELETE CASCADE
+         )";
+$res = $mysqli->query($query);
+if (!$res) {
+    echo "product table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
+    exit;
+}//End of error check for product table creation
 //create path table
 $query = "create table if not exists path(
-    id int unsigned not null auto_increment primary key,
-    product_id unsigned not null,
-    path text not null,
-    foreign key (product_id) references product(id)
-    )";
+         id int unsigned auto_increment primary key,
+         product_id int unsigned ,
+         path text not null,
+         foreign key (product_id) references product(id)
+         ON UPDATE CASCADE ON DELETE CASCADE
+         )";
 $res = $mysqli->query($query);
-if(!$res){
-    echo "path table creation failed (".$mysqli->errno.") ".$mysqli->error;
+if (!$res) {
+    echo "path table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
 }//End of error check for path table creation
-
-
+// create cart table
+$query = "create table if not exists cart(
+    quantity int unsigned,
+    user_id int unsigned,
+    product_id int unsigned,
+    foreign key (product_id) references product(id),
+    foreign key (user_id) references user(id),
+    PRIMARY KEY (user_id,product_id)
+    
+    )";
+$res = $mysqli->query($query);
+if (!$res) {
+    echo "cart table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
+    exit;
+}
+// create order table
+$query = "CREATE TABLE IF NOT EXISTS order_table(
+    ORDER_id INT  UNSIGNED  AUTO_INCREMENT PRIMARY KEY,
+    user_id int unsigned,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    foreign key (user_id) references user(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+    
+    );";
+$res = $mysqli->query($query);
+if (!$res) {
+    echo "order table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
+    exit;
+}
+//create ordered_product table
+$query = "create table if not exists ordered_product(
+    id int unsigned auto_increment primary key,
+    order_id int unsigned,
+    product_id int unsigned,
+    quantity int unsigned,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    foreign key (order_id) references order_table(ORDER_id),
+    foreign key (product_id) references product(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+    )";
+$res = $mysqli->query($query);
+if (!$res) {
+    echo "order _product table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
+    exit;
+}
 $mysqli->close();
 ?>
