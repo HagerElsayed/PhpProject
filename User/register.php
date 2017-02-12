@@ -1,12 +1,12 @@
 <?php
 require_once '../DatabaseClasses/user.php';
 
+//========global Variables =================
 $usernameErr = $emailErr = $passErr = $credit_limitErr = "";
-
 $valid = true;
 
 if (isset($_POST['register'])) {
-
+    //============ Vslidation With PHP =======================
     global $usernameErr, $emailErr, $passErr, $credit_limitErr;
     global $valid;
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -18,7 +18,7 @@ if (isset($_POST['register'])) {
     $credit_limit = filter_input(INPUT_POST, 'credit_limit', FILTER_SANITIZE_NUMBER_INT);
     if ($credit_limit == null) {
         $credit_limitErr = 'Credit limit is required';
-        //require_once '../DataBase/user.php';
+
         $valid = false;
     }
 
@@ -47,15 +47,13 @@ if (isset($_POST['register'])) {
     }
     $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $job = filter_input(INPUT_POST, 'job', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    //$birthday = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $birthday = $_POST['birthday'];
 
 
 
 
-
+    //========= Insertion ===================
     if ($valid) {
-        //$user = new user(1, 'admin', 'admin', 'admin@admin.com', '2017-02-12', 2000, 'Developer', 'Mansoura');
         $user = new user(null, $username, $pass, $email, $birthday, $credit_limit, $job, $address);
         if ($user->insert()) {
             header("Location:profile.php");
@@ -83,8 +81,91 @@ if (isset($_POST['register'])) {
         </style>
     </head>
 
+    <script src="../bootstrap/jquery-3.1.1.min.js"></script>
+    <script src="../bootstrap/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+
+            //============= Check if Email Exists or Not using Ajax ====================
+            $("#email").on('blur', function (event) {
+                console.log("blur");
+                $.ajax({
+                    url: "emailChecker.php",
+                    method: "post",
+                    data: "email=" + $(this).val(),
+                    async: true,
+                    success: function (data) {
+
+                        if (data == 1)
+                        {
+                            $("#emailInfo").html("Sorry,This is email Already Exist");
+                            $("#register").prop("disabled", true);
+
+
+
+                        } else {
+                            $("#emailInfo").html("");
+                            $("#register").prop("disabled", false);
+                        }
+                        console.log(data);
+
+
+                    }
+//                    ,
+//                    error: function (error) {
+//                        console.log(error);
+//                    }
+                });//end of ajax
+
+            }); //end of blur function
+
+
+            //=====Validation By JQuary ============================
+            $("#register-form").validate({
+                rules: {
+                    username: "required",
+
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    pass: {
+                        required: true,
+                        minlength: 3
+                    },
+                    credit_limit: "required"
+
+                },
+
+                //========== validation error messages=================
+                messages: {
+                    username: "Please enter your Name",
+
+                    pass: {
+                        required: "Please Enter your Password",
+                        minlength: "Your password must be at least 3 characters long"
+                    },
+                    email: "Please Enter a valid Email Address",
+                    credit_limit: "Please Enter your Creadit Limit"
+
+                },
+
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });//end of validation
+
+
+
+
+        });//end of load function
+
+
+    </script>
+
     <body>
-        <form class="form-horizontal" method="post">
+        <form class="form-horizontal" method="post" id="register-form">
             <br>
             <br>
             <div class="form-group">
@@ -98,7 +179,7 @@ if (isset($_POST['register'])) {
                 <label for="email" class="col-sm-4 control-label">Email*</label>
                 <div class="col-sm-4">
                     <input type="email" class="form-control" id="email" name="email" value="<?= isset($email) ? $email : '' ?>" placeholder="Email" >
-                    <span class = "error"> <?= $emailErr ?></span>
+                    <span class = "error" id="emailInfo"> <?= $emailErr ?></span>
 
                 </div>
             </div>
