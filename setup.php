@@ -22,7 +22,7 @@ if ($mysqli->errno) {
 $query = "create table if not exists user(
   id int unsigned auto_increment primary key,
   username varchar(100) not null,
-  password int not null,
+  password char(40) not null,
   email varchar(100) unique,
   birthday date not null,
   credit_limit float not null,
