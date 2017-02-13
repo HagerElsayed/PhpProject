@@ -16,7 +16,8 @@ class user {
     private $registered_at;
     private $update_at;
 
-    //start constructor
+
+  //============== CONSTRUCTOR ========================
     function __construct($id, $username, $password, $email, $birthday, $credit_limit, $job, $address, $status = 1, $registered_at = null, $update_at = null) {
         $this->id = isset($this->id) ? $this->id : $id;
         $this->username = isset($this->username) ? $this->username : $username;
@@ -29,9 +30,7 @@ class user {
         $this->status = isset($this->status) ? $this->status : $status;
         $this->registered_at = isset($this->registered_at) ? $this->registered_at : $registered_at;
         $this->update_at = isset($this->update_at) ? $this->update_at : $update_at;
-    }
-
-//end constructor
+    }//end constructor
 
     function __get($attr) {
         return $this->$attr;
@@ -41,7 +40,7 @@ class user {
         $this->$attr = $value;
     }
 
-    //start insert method
+    //============== INSERT========================
     function insert() {
         $success = true;
         global $mysqli;
@@ -69,9 +68,8 @@ class user {
         $mysqli->close();
         return $success;
     }
-
-//end insert method
-//start getById method
+//end of insertion
+//============== Get by id========================
     static function getById($id) {
         $success = true;
         global $mysqli;
@@ -103,9 +101,8 @@ class user {
         $stmt->close();
         $mysqli->close();
         return $user;
-    }
-    
-    
+    }//end getById
+
     //============== Get by Email========================
        static function getByEmail($email) {
         $success = true;
@@ -140,8 +137,7 @@ class user {
         return $user;
     }//end of get by email
 
-//end getById method
-    //start getAll method
+//============== GET ALL ========================
     function getAll() {
         $success = true;
         global $mysqli;
@@ -170,8 +166,8 @@ class user {
         return $users;
     }
 
-//end getAll method
-//start delete method
+//end of getAll
+//============== DELETE ========================
     function delete($id) {
         $success = true;
         global $mysqli;
@@ -195,8 +191,8 @@ class user {
         return $success;
     }
 
-//end delete method
-//start update method
+//end of delete
+//============== UPDATE ========================
     function update() {
         $success = true;
         global $mysqli;
@@ -224,12 +220,54 @@ class user {
         return $success;
     }
 
-//end update method
-}
+//end of update
 
-//end class user
+//============== Login ========================
+static function login()
+{
+  global $passwordErr;
+  global $emailErr;
+  global $mysqli;
+  $email=$_POST['email'];
+  $password=$_POST['password'];
 
+  $row=user::getByEmail($email);
+  // var_dump($row);
+  if(isset($row))
+  {
+    if($password===$row->password && $row->status==1)
+    {
+      session_start();
+      $_SESSION['loggeduser']=$row;
+      if($row->id==1)
+      {
+        echo" admin";
+        // header('Location:admin.php');
+      }else {
+        //user
+          header('Location:profile.php');
+      }
 
+    }
+    else if ($row->status==0)
+    {
+      $emailErr = "Invalid email address";
+      $valid = false;
+    }
+    else if($password !==$row->password )
+      {
+        $passwordErr = 'password is incorrect';
+        $valid = false;
+      }
+  }//end if($row)
+  else {
 
+    $emailErr = "Email dosent found please register first";
+    $valid = false;
+  }
+
+}//end of login
+
+}//end class user
 
 ?>
