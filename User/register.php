@@ -1,5 +1,6 @@
 <?php
 require_once '../DatabaseClasses/user.php';
+require_once '../DatabaseClasses/interests.php';
 
 //========global Variables =================
 $usernameErr = $emailErr = $passErr = $credit_limitErr = "";
@@ -49,7 +50,21 @@ if (isset($_POST['register'])) {
     $job = filter_input(INPUT_POST, 'job', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $birthday = $_POST['birthday'];
 
+    //========== Interests Trial ==========
 
+    $checkboxes = $_POST['interest'];
+
+    $interest_name = implode(',', $checkboxes);
+
+    if (isset($_POST["email"])) {
+        if ($valid) {
+            $interest = new interests($_POST['email'], null, $interest_name);
+            //var_dump($_POST['email']);
+            if ($interest->insert()) {
+                echo ' Interests is inserted';
+            }
+        }
+    }
 
 
     //========= Insertion ===================
@@ -60,6 +75,8 @@ if (isset($_POST['register'])) {
             //echo 'User is Inserted';
         }
     }
+
+
 
     //var_dump($_POST);
 }
@@ -223,6 +240,20 @@ if (isset($_POST['register'])) {
 
                 </div>
             </div>
+            <div class="checkbox">
+                <label for="interest" class="col-sm-4 control-label">Interests</label>
+                <div class="col-sm-4">
+                    <label>
+                        <input type="checkbox" name="interest[]" value="Clothes"> Clothes<br>
+                        <input type="checkbox" name="interest[]" value="Technology"> Technology<br>
+                        <input type="checkbox" name="interest[]" value="Books"> Books<br>
+
+                    </label>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br><br><br>
 
             <div class="form-group">
                 <div class="col-sm-offset-5 col-sm-5">
@@ -230,6 +261,7 @@ if (isset($_POST['register'])) {
                     <button type="reset" class="btn btn-warning">Reset</button>
                 </div>
             </div>
+
 
 
 
