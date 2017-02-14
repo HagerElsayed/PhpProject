@@ -23,11 +23,11 @@ $query = "create table if not exists user(
   id int unsigned auto_increment primary key,
   username varchar(100) not null,
   password char(40) not null,
-  email varchar(100) unique,
-  birthday date not null,
+  email varchar(100) not null unique ,
+  birthday date ,
   credit_limit float not null,
   job varchar(100) ,
-  address text not null,
+  address text ,
   status tinyint unsigned,
   registered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -39,10 +39,10 @@ if (!$res) {
 }
 //Create Interests Table
 $query = "create table if not exists interests(
-   user_id int unsigned,
+   user_email varchar(40) ,
    id int unsigned auto_increment primary key,
    interest_name varchar(100) not null,
-   foreign key (user_id) references user(id)
+   foreign key (user_email) references user(email)
    ON UPDATE CASCADE ON DELETE CASCADE
    )";
 $res = $mysqli->query($query);
