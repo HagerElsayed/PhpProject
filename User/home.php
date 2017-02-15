@@ -1,6 +1,8 @@
 <?php
 
- ?>
+require_once '../DatabaseClasses/product.php';
+
+?>
 
  <!DOCTYPE html>
  <html>
@@ -20,3 +22,9 @@
   </form>
    </body>
  </html>
+
+<?php
+$product=product::select();
+var_dump($product);
+
+ ?>

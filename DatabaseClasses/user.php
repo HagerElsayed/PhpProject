@@ -138,7 +138,7 @@ class user {
     }//end of get by email
 
 //============== GET ALL ========================
-    function getAll() {
+    static function getAll() {
         $success = true;
         global $mysqli;
         $query = "select * from user";

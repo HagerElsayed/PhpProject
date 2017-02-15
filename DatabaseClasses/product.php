@@ -1,5 +1,5 @@
 <?php
-
+require 'config.php';
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -21,7 +21,7 @@ class product {
 //    photo text,
 //    price float not null,
 //    foreign key (subcategory_id) references subcategory(id)
-//    
+//
 
 
     private $id;
@@ -50,7 +50,7 @@ class product {
     }
 
     //====Insert Function=====
-    function insert() {
+     function insert() {
         $success = true;
 
         //1_connect DB
@@ -84,8 +84,37 @@ class product {
         $stmt->close();
         $con->close();
         return $success;
-    }
-    
-    
+    }//END INSERT FUNCTION
 
-}
+//============== SELECT FUNCTION ========================
+      static function select() {
+            $success = true;
+            global $mysqli;
+            $query = "select * from product";
+            //prepare
+            $stmt = $mysqli->prepare($query);
+            if (!$stmt) {
+                echo "error prepare" . $mysqli->error;
+                exit;
+            }
+
+            //execute
+            if (!$stmt->execute()) {
+                echo 'execuation failed' . "<br />" . $stmt->error;
+                $success = false;
+                exit;
+            }
+            $result = $stmt->get_result();
+            $products = [];
+            $params = array('id', 'subcategory_id', 'name', 'quantity', 'description', 'price', 'photo');
+            while ($product = $result->fetch_object('product', $params)) {
+                $products[] = $product;
+            }
+            $stmt->close();
+            $mysqli->close();
+            return $products;
+        }//END SELECT FUNCTION
+
+
+
+}//end class product

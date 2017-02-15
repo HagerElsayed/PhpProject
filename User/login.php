@@ -2,12 +2,15 @@
 
 require_once '../DatabaseClasses/user.php';
 
-
 $emailErr = $passwordErr = "";
 $valid = true;
 
 if (isset($_POST['login']))
 {
+    if(isset($_POST['remember me']))
+    {
+        setcookie("user",$user, time()+(60*60*24*7));
+    }
 global $mysqli;
 global $emailErr , $passwordErr;
 global $valid;
