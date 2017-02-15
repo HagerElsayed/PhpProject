@@ -36,5 +36,59 @@ class subcategory
     }
     return false;
   }//End ot insert function
+  static function selectAllCategories(){
+    global $mysqli;
+    $categoryList =  array();
+    $query = "select category_name from subcategory";
+    $stmt = $mysqli->prepare($query);
+    if(!$stmt)
+      return false;
+    if(!$stmt->execute())
+      return false;
+    $result = $stmt->get_result();
+    while($row=$result->fetch_array()){
+      if(!in_array($row[0],$categoryList))
+        $categoryList[] = $row[0];
+    }
+    $stmt->close();
+    $mysqli->close();
+    return $categoryList;
+  }//End of selectAllCategories
+  static function selectAllSubCategories(){
+    global $mysqli;
+    $query = "select name from subcategory";
+    $stmt = $mysqli->prepare($query);
+    if(!$stmt)
+      return false;
+    if(!$stmt->execute())
+      return false;
+    $result = $stmt->get_result();
+    while($row=$result->fetch_array()){
+        if(!in_array($row[0],$subcategoryList))
+          $subcategoryList[] = $row[0];
+    }
+    $stmt->close();
+    $mysqli->close();
+    return $subcategoryList;
+  }//End of selectAllSubCategories
+  static function selectsubCategories($chosenCategory){
+    global $mysqli;
+    $subcategoryList = array();
+    $query = "select name from subcategory where category_name = ?";
+    $stmt = $mysqli->prepare($query);
+    if(!$stmt)
+      return false;
+    $stmt->bind_param('s',$chosenCategory);
+    if(!$stmt->execute())
+      return false;
+    $result = $stmt->get_result();
+    while($row=$result->fetch_array()){
+        if(!in_array($row[0],$subcategoryList))
+          $subcategoryList[] = $row[0];
+    }
+    $stmt->close();
+    $mysqli->close();
+    return $subcategoryList;
+  }//End of selectAllCategories
 }//End of subcategory class
  ?>
