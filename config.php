@@ -1,5 +1,5 @@
 <?php
-
+ob_start();
 define('DBHOST', 'localhost');
 define('DBUSER', 'root');
 define('DBPASS', 'iti');
@@ -17,7 +17,7 @@ define('STATUS_INACTIVE', 2);
 define('STATUS_DELETED', 0);
 
 function isLogged() {
-    session_start();
+    @session_start();
 
     if (isset($_SESSION['loggeduser'])) {
         $loggeduser = $_SESSION['loggeduser'];

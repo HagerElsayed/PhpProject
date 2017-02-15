@@ -2,7 +2,6 @@
 
 require_once '../DatabaseClasses/user.php';
 
-
 $emailErr = $passwordErr = "";
 $valid = true;
 
