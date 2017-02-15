@@ -1,6 +1,6 @@
 <?php
 
-require '../config.php';
+require 'config.php';
 
 class user {
 
@@ -250,7 +250,7 @@ class user {
                 session_start();
                 $_SESSION['loggeduser'] = $row;
                 if ($row->id == 1) {
-                    header("Location:../Admin/mangeUsers.php");
+                    header("Location:mangeUsers.php");
                     // header('Location:admin.php');
                 } else {
                     //user
@@ -272,7 +272,33 @@ class user {
     }
 
 //end of login
-}
 
+//============== editUser ========================
+  function editUser() {
+    global $mysqli;
+        if ($mysqli->connect_errno) {
+            return false;
+        }
+        $query = "update user set username=? ,password=? ,birthday=? ,job=? ,address=? where id=? ";
+        //prepare
+        $stmt = $mysqli->prepare($query);
+        if (!$stmt) {
+            return false;
+        }
+
+        //bind_param
+        $result = $stmt->bind_param('sssssi', $this->username, $this->password, $this->birthday, $this->job, $this->address, $this->id);
+        if (!$result) {
+            return false;
+        }
+        //execute
+        if (!$stmt->execute()) {
+            return false;
+        }
+        $stmt->close();
+        $mysqli->close();
+        return true;
+    }//end of update
+  }
 //end class user
 ?>
