@@ -21,8 +21,6 @@ function isLogged() {
 
     if (isset($_SESSION['loggeduser'])) {
         $loggeduser = $_SESSION['loggeduser'];
-
-        //echo 'hi ' . $loggeduser->username;
         return $loggeduser;
     } else {
         header("Location:../User/login.php");
