@@ -250,11 +250,11 @@ class user {
                 session_start();
                 $_SESSION['loggeduser'] = $row;
                 if ($row->id == 1) {
-                    header("Location:mangeUsers.php");
+                    header("Location:../Admin/mangeUsers.php");
                     // header('Location:admin.php');
                 } else {
                     //user
-                    header('Location:profile.php');
+                    header('Location:../User/profile.php');
                 }
             } else if ($row->status == 0) {
                 $emailErr = "Invalid email address";
