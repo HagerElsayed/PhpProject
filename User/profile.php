@@ -15,5 +15,5 @@ require_once '../DatabaseClasses/user.php';
       }
 
  ?>
-
+<a href="editprofile.php">Edit My profile</a>
 <a href="logout.php"> logout</a>

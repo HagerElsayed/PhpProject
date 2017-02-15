@@ -1,10 +1,14 @@
 <?php
 
-require 'config.php';
+define('DBHOST', 'localhost');
+define('DBUSER', 'root');
+define('DBPASS', 'iti');
+define('DBNAME', 'phpProject');
 $mysqli = new mysqli(DBHOST, DBUSER, DBPASS);
 // open connection
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    exit;
 }
 //create database
 $res = $mysqli->query('create database if not exists ' . DBNAME);
@@ -23,11 +27,11 @@ $query = "create table if not exists user(
   id int unsigned auto_increment primary key,
   username varchar(100) not null,
   password char(40) not null,
-  email varchar(100) unique,
-  birthday date not null,
+  email varchar(100) not null unique ,
+  birthday date ,
   credit_limit float not null,
   job varchar(100) ,
-  address text not null,
+  address text ,
   status tinyint unsigned,
   registered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -39,10 +43,10 @@ if (!$res) {
 }
 //Create Interests Table
 $query = "create table if not exists interests(
-   user_id int unsigned,
+   user_email varchar(40) ,
    id int unsigned auto_increment primary key,
    interest_name varchar(100) not null,
-   foreign key (user_id) references user(id)
+   foreign key (user_email) references user(email)
    ON UPDATE CASCADE ON DELETE CASCADE
    )";
 $res = $mysqli->query($query);
@@ -99,7 +103,7 @@ $query = "create table if not exists cart(
     foreign key (product_id) references product(id),
     foreign key (user_id) references user(id),
     PRIMARY KEY (user_id,product_id)
-    
+
     )";
 $res = $mysqli->query($query);
 if (!$res) {
@@ -113,7 +117,7 @@ $query = "CREATE TABLE IF NOT EXISTS order_table(
     date DATETIME DEFAULT CURRENT_TIMESTAMP,
     foreign key (user_id) references user(id)
     ON UPDATE CASCADE ON DELETE CASCADE
-    
+
     );";
 $res = $mysqli->query($query);
 if (!$res) {
@@ -136,6 +140,6 @@ if (!$res) {
     echo "order _product table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
 }
+echo "dataBase created";
 $mysqli->close();
 ?>
-
