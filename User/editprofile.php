@@ -1,8 +1,8 @@
 <?php
 //session_start();
 //echo "profile Page";
-require_once 'user.php';
-include_once 'config.php';
+require_once '../DatabaseClasses/user.php';
+include_once '../DatabaseClasses/config.php';
 
 $user = isLogged();
  ?>

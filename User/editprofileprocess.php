@@ -1,8 +1,8 @@
 <?php
 echo "edit profile process page";
 echo "<br>";
-require_once 'user.php';
-include_once 'config.php';
+require_once '../DatabaseClasses/user.php';
+include_once '../DatabaseClasses/config.php';
 $user = isLogged();
 $user->userame = $_POST['name'];
 $user->password = sha1($_POST['password']);

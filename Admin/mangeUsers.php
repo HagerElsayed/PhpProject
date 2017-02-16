@@ -20,9 +20,10 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Manage Product
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Add product</a></li>
-                                <li><a href="#">Add Category </a></li>
-                                <li><a href="#">Add subcategory</a></li>
+                              <li><a href="manageproducts.php">Manage All Products</a></li>
+                              <li><a href="addproduct.php">Add product</a></li>
+                              <li><a href="addcategory.php">Add Category </a></li>
+                              <li><a href="addsubcategory.php">Add subcategory</a></li>
                             </ul>
                         </li>
 
@@ -98,7 +99,7 @@
             }
             ?>
 
-          
+
 
 
         </div><!--End of control-->
@@ -111,9 +112,3 @@
 
 
 </html>
-
-
-
-
-
-
