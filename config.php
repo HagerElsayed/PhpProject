@@ -12,15 +12,12 @@ if ($mysqli->connect_errno) {
 }
 $mysqli->select_db(DBNAME);
 
-<<<<<<< HEAD
-
-=======
 define('STATUS_ACTIVE', 1);
 define('STATUS_INACTIVE', 2);
 define('STATUS_DELETED', 0);
 
 function isLogged() {
-    @session_start();
+    session_start();
 
     if (isset($_SESSION['loggeduser'])) {
         $loggeduser = $_SESSION['loggeduser'];
@@ -39,6 +36,4 @@ function isAdmin($user) {
         header("Location:../User/login.php");
     }
 }
->>>>>>> 5c1ea04cd95a7f75e08818dce90e50d8efd5d654
-
 ?>
