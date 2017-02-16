@@ -42,8 +42,9 @@ $products = product::select();
                     success: function (data) {
                         if ($("#name").val() != "")
                         {
+                            
                             var array = jQuery.parseJSON(data);
-                            console.log(array.name);
+                            console.log(data);
                            
                             $("#searchResult").prop("style").display = "block";
                             $("#productname").html(array.name);
@@ -87,7 +88,7 @@ $products = product::select();
                                     <li><a href=""><i class="fa fa-user"></i> Account</a></li>
 
                                     <li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-                                    <li><a href="login.html" ><i class="fa fa-lock"></i> Login</a></li>
+                                    <li><a href="./User/login.php" ><i class="fa fa-lock"></i> Login</a></li>
                                     <li><a href="./User/register.php"><i class="fa fa-lock"></i> Sign Up</a></li>
 
 
@@ -118,7 +119,7 @@ $products = product::select();
                                             <li><a href="shop.html">Products</a></li>
                                             <li><a href="product-details.html">Product Details</a></li>
                                             <li><a href="cart.html">Cart</a></li>
-                                            <li><a href="login.html" >Login</a></li>
+                                            <li><a href="./User/login.php" >Login</a></li>
                                             <li><a href="./User/register.php"><i class="fa fa-lock"></i> Sign Up</a></li>
                                         </ul>
                                     </li>
@@ -138,7 +139,7 @@ $products = product::select();
             </div><!--/header-bottom-->
         </header><!--/header-->
 
-        <section id="slider">slider
+        <section id="slider"><!--Slider-->
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -201,7 +202,7 @@ $products = product::select();
                     </div>
                 </div>
             </div>
-        </section>slider
+        </section>
 
 
         <section>
