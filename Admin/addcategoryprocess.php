@@ -6,7 +6,7 @@ if (isAdmin($user)){
   $users = user::getAll();
 }
 else {
-  header("location:login.php");
+  header("location:./login.php");
 }
 
 if(isset($_POST['name'])){
