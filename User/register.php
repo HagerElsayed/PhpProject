@@ -1,13 +1,13 @@
 <?php
 require_once '../DatabaseClasses/user.php';
 require_once '../DatabaseClasses/interests.php';
-
+//require_once '../DatabaseClasses/subcategory.php';
+//require_once '../function.php';
 //========global Variables =================
 $usernameErr = $emailErr = $passErr = $credit_limitErr = "";
 $valid = true;
-
 if (isset($_POST['register'])) {
-    //============ Vslidation With PHP =======================
+//============ Vslidation With PHP =======================
     global $usernameErr, $emailErr, $passErr, $credit_limitErr;
     global $valid;
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -50,35 +50,31 @@ if (isset($_POST['register'])) {
     $job = filter_input(INPUT_POST, 'job', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $birthday = $_POST['birthday'];
 
-    //========== Interests Trial ==========
+//========== Interests Trial ==========
 
     $checkboxes = $_POST['interest'];
 
-    $interest_name = implode(',', $checkboxes);
-
-    if (isset($_POST["email"])) {
-        if ($valid) {
-            $interest = new interests($_POST['email'], null, $interest_name);
-            //var_dump($_POST['email']);
-            if ($interest->insert()) {
-                echo ' Interests is inserted';
+//$interest_name = implode(',', $checkboxes);
+    foreach ($checkboxes as $interest_name) {
+        if (isset($_POST["email"])) {
+            if ($valid) {
+                $interest = new interests($_POST['email'], null, $interest_name);
+                //var_dump($_POST['email']);
+                if ($interest->insert()) {
+                    echo ' Interests is inserted';
+                }
             }
         }
     }
-
-
-    //========= Insertion ===================
+//========= Insertion ===================
     if ($valid) {
         $user = new user(null, $username, $pass, $email, $birthday, $credit_limit, $job, $address);
         if ($user->insert()) {
             header("Location:profile.php");
-            //echo 'User is Inserted';
+//echo 'User is Inserted';
         }
     }
-
-
-
-    //var_dump($_POST);
+//var_dump($_POST);
 }
 ?>
 
@@ -87,6 +83,29 @@ if (isset($_POST['register'])) {
 <!DOCTYPE html>
 <html lang="en">
     <head>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Home | E-Shopper</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/prettyPhoto.css" rel="stylesheet">
+        <link href="../css/price-range.css" rel="stylesheet">
+        <link href="../css/animate.css" rel="stylesheet">
+        <link href="../css/main.css" rel="stylesheet">
+        <link href="../css/responsive.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+        <script src="js/html5shiv.js"></script>
+        <script src="js/respond.min.js"></script>
+        <![endif]-->
+        <link rel="shortcut icon" href="../images/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="../images/ico/apple-touch-icon-57-precomposed.png">
         <meta charset="UTF-8">
         <title>Document</title>
         <link href="../bootstrap/Content/bootstrap.css" rel="stylesheet" type="text/css"/>
@@ -118,8 +137,6 @@ if (isset($_POST['register'])) {
                         {
                             $("#emailInfo").html("Sorry,This is email Already Exist");
                             $("#register").prop("disabled", true);
-
-
 
                         } else {
                             $("#emailInfo").html("");
@@ -182,6 +199,75 @@ if (isset($_POST['register'])) {
     </script>
 
     <body>
+        <header id="header"><!--header-->
+
+
+            <div class="header-middle"><!--header-middle-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="logo pull-left">
+                                <a href="index.html"><img src="../images/home/logo.png" alt="" /></a>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="shop-menu pull-right">
+                                <ul class="nav navbar-nav">
+                                    <li><a href=""><i class="fa fa-user"></i> Account</a></li>
+                                    <li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                    <li><a href="login.html" ><i class="fa fa-lock"></i> Login</a></li>
+                                    <li><a href="register.php"  class="active"><i class="fa fa-lock"></i> Sign Up</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--/header-middle-->
+
+            <div class="header-bottom"><!--header-bottom-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                            <div class="mainmenu pull-left">
+                                <ul class="nav navbar-nav navbar-collapse collapse" style="height: 0.909091px;">
+                                    <li><a href="index.html">Home</a></li>
+                                    <li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="shop.html">Products</a></li>
+                                            <li><a href="product-details.html">Product Details</a></li>
+                                            <li><a href="cart.html">Cart</a></li>
+                                            <li><a href="login.html" >Login</a></li>
+                                            <li><a href="register.php" class="active" >Sign Up</a></li>
+                                        </ul>
+                                    </li>
+
+
+                                    <li><a href="../contact-us.html">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="search_box pull-right">
+                                <input type="text" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--/header-bottom-->
+        </header><!--/header-->
+
+
+
         <form class="form-horizontal" method="post" id="register-form">
             <br>
             <br>
@@ -240,13 +326,44 @@ if (isset($_POST['register'])) {
 
                 </div>
             </div>
+
+            <label for="interest" class="col-sm-4 control-label">Interests</label>
+
             <div class="checkbox">
-                <label for="interest" class="col-sm-4 control-label">Interests</label>
                 <div class="col-sm-4">
+
                     <label>
-                        <input type="checkbox" name="interest[]" value="Clothes"> Clothes<br>
-                        <input type="checkbox" name="interest[]" value="Technology"> Technology<br>
-                        <input type="checkbox" name="interest[]" value="Books"> Books<br>
+                        <?php
+
+                        function selectAllSubCategories() {
+                            global $mysqli;
+                            $subcategoryList = array();
+                            $query = "select name from subcategory";
+                            $stmt = $mysqli->prepare($query);
+                            if (!$stmt)
+                                return false;
+                            if (!$stmt->execute())
+                                return false;
+                            $result = $stmt->get_result();
+                            while ($row = $result->fetch_array()) {
+                                if (!in_array($row[0], $subcategoryList))
+                                    $subcategoryList[] = $row[0];
+                            }
+                            $stmt->close();
+                            $mysqli->close();
+                            return $subcategoryList;
+                        }
+
+                        $subcategory = selectAllSubCategories();
+
+                        echo "<br>";
+                        foreach ($subcategory as $sub_category) {
+                            ?>
+                            <input type = "checkbox" name = "interest[]" value = "<?= $sub_category ?>"> <?= $sub_category ?><br>
+                            <?php
+                        }
+                        ?>
+
 
                     </label>
                 </div>
@@ -258,14 +375,40 @@ if (isset($_POST['register'])) {
             <div class="form-group">
                 <div class="col-sm-offset-5 col-sm-5">
                     <input type="submit" name ="register" class="btn btn-primary" value="Sign Up">
-                    <button type="reset" class="btn btn-warning">Reset</button>
+
+                </div>
+            </div>  
+        </form>
+
+        <footer id="footer"><!--Footer-->
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="companyinfo">
+                                <h2><span>e</span>-shopper</h2>
+                                <p></p>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
 
 
 
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <p class="pull-left">Copyright © 2016 E-SHOPPER Inc. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
 
-        </form>
+        </footer><!--/Footer-->
+
+
 
     </body>
 </html>
