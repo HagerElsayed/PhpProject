@@ -148,12 +148,13 @@ class user {
 //============== GET ALL ========================
     static function getAll() {
         $success = true;
-        global $mysqli;
+        //global $mysqli;
+        $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
         $query = "select * from user";
         //prepare
-        $stmt = $mysqli->prepare($query);
+        $stmt = $con->prepare($query);
         if (!$stmt) {
-            echo "error prepare" . $mysqli->error;
+            echo "error prepare" . $con->error;
             exit;
         }
 
@@ -170,7 +171,7 @@ class user {
             $users[] = $user;
         }
         $stmt->close();
-        $mysqli->close();
+        $con->close();
         return $users;
     }
 
