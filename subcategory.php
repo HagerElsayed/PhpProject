@@ -72,9 +72,7 @@ class subcategory
     return $subcategoryList;
     $stmt->close();
     $con->close();
-
   }//End of selectAllSubCategories
-
   static function selectsubCategories($chosenCategory){
     global $mysqli;
     $subcategoryList = array();
@@ -111,5 +109,125 @@ class subcategory
     return $row[0];
     var_dump($row);
   }//END SELECTION
+  //============== Get by id========================
+    static function selectById($id) {
+      //global $mysqli;
+      $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+
+      $query = "select name from subcategory where id = ?";
+
+      $stmt = $con->prepare($query);
+
+      if (!$stmt) {
+        return false;
+        }
+      //pind_param
+      $res = $stmt->bind_param('i', $id);
+      if (!$res) {
+        echo 'binding failed' . $stmt->error;
+        return false;
+      }
+      //execute
+      if (!$stmt->execute()) {
+        return false;
+      }
+      $result = $stmt->get_result();
+      $result = $result->fetch_array();
+      $stmt->close();
+      $con->close();
+      return $result;
+      }//end getById
+      //============== Get by name========================
+        static function selectByName($name) {
+          //global $mysqli;
+          $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+
+          $query = "select id from subcategory where name = ?";
+
+          $stmt = $con->prepare($query);
+
+          if (!$stmt) {
+            return false;
+            }
+          //pind_param
+          $res = $stmt->bind_param('s', $name);
+          if (!$res) {
+            echo 'binding failed' . $stmt->error;
+            return false;
+          }
+          //execute
+          if (!$stmt->execute()) {
+            return false;
+          }
+          $result = $stmt->get_result();
+          $result = $result->fetch_array();
+          $stmt->close();
+          $con->close();
+          return $result;
+        }//end selectByName
+        static function select() {
+              $success = true;
+              //global $mysqli;
+              $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+              $query = "select * from subcategory";
+              //prepare
+              $stmt = $con->prepare($query);
+              if (!$stmt) {
+                  echo "error prepare" . $con->error;
+                  exit;
+              }
+
+              //execute
+              if (!$stmt->execute()) {
+                  echo 'execuation failed' . "<br />" . $stmt->error;
+                  $success = false;
+                  exit;
+              }
+              $result = $stmt->get_result();
+              $products = [];
+              $params = array( 'name', 'category_name');
+              while ($product = mysqli_fetch_object($result)) {
+                  $products[] = $product;
+              }
+              $stmt->close();
+              $con->close();
+              return $products;
+
+          }//END SELECT FUNCTION
+          //============== UPDATE ========================
+              static function update($oldName,$newName) {
+                  $success = true;
+                  //global $mysqli;
+                  $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+                  if ($con->connect_errno) {
+                      echo 'error connection to DB' . $con->connect_error . "<br>";
+                      $success = false;
+                      //exit;
+                  }
+                  $query = "update subcategory set name=? where name=? ";
+                  //prepare
+                  $stmt = $con->prepare($query);
+                  if (!$stmt) {
+                      echo "error prepare" . $con->error;
+                  }
+
+                  //bind_param
+                  $result = $stmt->bind_param('ss', $newName,$oldName);
+                  if (!$result) {
+                      echo 'binding failed' . $stmt->error;
+                      $success = false;
+                  }
+                  //execute
+                  if (!$stmt->execute()) {
+                      echo 'execuation failed' . "<br />" . $stmt->error;
+                      $success = false;
+                  }
+                  $stmt->close();
+                  $con->close();
+                  return $success;
+              }
+
+          //end of update
+
 }//End of subcategory class
  ?>
