@@ -54,11 +54,21 @@ if (!$res) {
     echo "Interests table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
 }//end interestes
+$query = "create table if not exists category(
+         name varchar(100) not null primary key
+         )";
+$res = $mysqli->query($query);
+if (!$res) {
+    echo "category table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
+    exit;
+}//End of error check for category table creation
 //create subcategory table
 $query = "create table if not exists subcategory(
          id int unsigned auto_increment primary key,
          name varchar(100) not null,
-         category_name varchar(100) not null
+         category_name varchar(100) not null,
+         foreign key (category_name) references category(name)
+         ON UPDATE CASCADE ON DELETE CASCADE
          )";
 $res = $mysqli->query($query);
 if (!$res) {
@@ -118,7 +128,7 @@ $query = "CREATE TABLE IF NOT EXISTS order_table(
     foreign key (user_id) references user(id)
     ON UPDATE CASCADE ON DELETE CASCADE
 
-    );";
+    )";
 $res = $mysqli->query($query);
 if (!$res) {
     echo "order table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
@@ -140,6 +150,8 @@ if (!$res) {
     echo "order _product table creation failed (" . $mysqli->errno . ") " . $mysqli->error;
     exit;
 }
+//create category table
+
 echo "dataBase created";
 $mysqli->close();
 ?>
