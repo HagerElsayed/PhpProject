@@ -25,9 +25,9 @@ else {
  <head>
    <meta charset=utf-8>
    <title>Add Product Page</title>
-   <link href="Content/bootstrap.css" rel="stylesheet" />
-   <script src="Scripts/jquery-1.9.1.js"></script>
-   <script src="Scripts/bootstrap.js"></script>
+   <link href="../bootstrap/Content/bootstrap.css" rel="stylesheet" />
+   <script src="../bootstrap/Scripts/jquery-1.9.1.js"></script>
+   <script src="../bootstrap/Scripts/bootstrap.js"></script>
    <script type="text/javascript">
  		$(function(){
        $("#categoryList").on("change",function(){

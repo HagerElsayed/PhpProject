@@ -10,7 +10,7 @@
  <html>
  <head>
    <meta charset=utf-8>
-   <title>Add Category Page</title>
+   <title>Add SubCategory Page</title>
    <link href="../bootstrap/Content/bootstrap.css" rel="stylesheet" />
    <script src="../bootstrap/Scripts/jquery-1.9.1.js"></script>
    <script src="../bootstrap/Scripts/bootstrap.js"></script>
@@ -47,35 +47,40 @@
      require '../DatabaseClasses/config.php';
      require_once '../DatabaseClasses/category.php';
      require_once '../DatabaseClasses/user.php';
+     require_once '../DatabaseClasses/subcategory.php';
      $user = isLogged();
      if (!isAdmin($user))
-       header("location:login.php");
-     $categories = category::select();
+       header("location:./login.php");
+     $subcategories = subcategory::select();
+     $categoryList = category::Select();
+
      ?>
      <table class = "table table-striped">
          <tr>
              <td>Number</td>
              <td>Name</td>
+             <td>Category Name</td>
              <td>Action</td>
          </tr>
 
          <?php
-         if (count($categories) > 0) {
+         if (count($subcategories) > 0) {
              $number = 1;
-             foreach ($categories as $category){
+             foreach ($subcategories as $subcategory){
 
                          ?>
                          <tr>
-                             <td><?= $number ?></td>
-                             <td><?= $category ?></td>
-                             <td><a class="btn-danger" href="editcategory.php?name=<?= $category ?>">Edit category</a></td>
+                             <td><?= $subcategory->id ?></td>
+                             <td><?= $subcategory->name ?></td>
+                             <td><?= $subcategory->category_name ?></td>
+                             <td><a class="btn-danger" href="editsubcategory.php?name=<?= $subcategory->name ?>">Edit subcategory</a></td>
                          </tr>
                          <?php
                          $number++;
                      }
                  }
           else {
-             echo '<tr><td clospan="3">No Products</td></tr>';
+             echo '<tr><td clospan="4">No Products</td></tr>';
          }
          ?>
 
@@ -86,10 +91,22 @@
 
 
 
-     <form action="addcategoryprocess.php" method="post">
+     <form action="addsubcategoryprocess.php" method="post">
       <div class="form-group">
-        <label for="name">Category Name : </label>
+        <label for="name">Name : </label>
         <input type="text" class="form-control" name="name">
+      </div>
+
+      <div class="form-group">
+        <label>Category :</label>
+        <select id="categoryList" name="category">
+          <option>choose category ...</option>
+          <?php
+            foreach ($categoryList as $value) {
+              echo "<option>".$value."</option>";
+            }
+           ?>
+        </select>
       </div>
 
       <button type="submit" class="btn btn-default">Add</button>
